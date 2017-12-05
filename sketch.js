@@ -1,77 +1,133 @@
-var img1 = {
-    loc: 0, 
-    size: 400,
-    x: 200,
-    y: 100,
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0   // no comma for the last one
-};
+var bgcol = 255;
+var bool = false;
+var imgBool = false;
+var bubbles = [];
 
-var img2 = {
-    loc: 0, 
-    size: 400,
-    x: 200,
-    y: 100,
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0   // no comma for the last one
-};
+//!constructor!//
 
-var courtmusic;
+function Bubble(x,y, img) {
+    this.x = x;
+    this.y = y;
+    this.img = img;
 
-//var img;
-//var imageSize;
-//
-//var imgX = 200;
-//var imgY = 100;
-//var imgSize = 400;
-//
-//var imgLeft;
-//var imgTop;
-//var imgRight;
-//var imgBottom;
-
-var col = 200;
-
-function preload(){
-    img1.loc = loadImage("royalcourtmusic.jpg");
-    img2.loc = loadImage("orchestra.jpg");
-    courtmusic = loadSound("royalMusic.mp3");
-}
-
-function setup(){
-    createCanvas(windowWidth,windowHeight);
-//    imageSize = 400;
+    this.display = function() {
+        imageMode(CENTER);
+        image(this.img, this.x, this.y);
+    }
     
-    
-
-}
-
-function draw(){
-    background(col);
-    image(img1.loc, img1.x, img1.y, img1.size, img1.size);
-    image(img2.loc, img2.x, img2.y, img2.size, img2.size);
-
+    this.update = function() {
+        this.x = this.x + random(-1,1);
+        this.y = this.y + random(-1,1);
+    }
     
 }
 
-function mousePressed(){
-        img1.top = img1.y;
-        img1.left = img1.x;
-        img1.right = img1.x + img1.size;
-        img1.bottom = img1.y + img1.size;
-        
-    if (mouseX > img1.left && mouseX < img1.right && mouseY > img1.top && mouseY < img1.bottom){
-        col = 255;
-          courtmusic.play();
+function Eng (x,y,letter, index) {
+    this.x = x;
+    this.y = y;
+    this.rectwidth = 130;
+    this.rectheight = 200;
+    this.letter = letter;
+    this.top = this.y;
+    this.bottom = this.y+ this.rectheight;
+    this.left = this.x;
+    this.right = this.x+ this.rectwidth;
+    
+     this.display = function() {
+            text(letter, this.x, this.y+150);       
+            rect(this.x,this.y, this.rectwidth, this.rectheight); 
     }
     
     
-    
-    
+   this.clickbutton = function() {
+   
+   if(mouseX > this.left && mouseX < this.right && mouseY > this.top && mouseY < this.bottom){
+       imgBool = true;
+       
+       bool = !bool;
+//       if(bool){
+//           bgcol = 0;
+//       }else{
+//           bgcol = 255;
+//       }
+       
+   }
+   }
+   
+   this.imgDisplay = function(){
+//       if(bubbles.length >0){
+//       bubbles[this.index].display();
+//     }
+
+   }
 }
-  
+
+
+//!array!//
+
+
+var alphabets = [];
+var letters = ["A", "B", "C", "D", "E", "F", "G"];
+var engs = [];
+var increment = 200;
+var x= 200;
+//var song;
+
+function preload() {
+       
+//    song = loadSound('song.mp3');
     
+    for (var i = 0; i < 27; i++){
+        alphabets[i] = loadImage ('images/alphabet' + i + '.png');
+       
+    }
+}
+
+function setup() {
+    
+//    song.play();
+    createCanvas(windowWidth, windowHeight);
+//       var r = floor(random(0, alphabets.length));  
+        var engs1 = new Eng(x+ increment, height-450, letters[0], 0);
+        engs.push(engs1);
+}
+
+function mousePressed() {
+//    var r = floor(random(0, alphabets.length));  
+//    var b = new Bubble(mouseX, mouseY, alphabets[r]);
+    for (var i = 0; i < engs.length; i++) {
+    engs[i].clickbutton();
+    }
+
+}
+
+function draw() {
+
+    background(bgcol);
+    for (var i = 0; i < 26; i++) {
+        var b = new Bubble(width/2, height/2, alphabets[i]);
+        bubbles.push(b);
+    }
+//    for (var i = bubbles.length -1; i >= 0; i--) {
+//        bubbles[i].update();
+//        bubbles[i].display(); 
+//    }
+    for (var i = 0; i < engs.length; i++) {
+    engs[i].display();
+    }
+//    engs[0].imgDisplay();
+        if(imgBool){
+       bubbles[0].display();
+        }
+    
+    
+//    bubbles[0].display();
+    fill(0);
+    textSize(200);
+//    text(letters[0], 200, height-300);     
+//     for (var i = 0; i < letters.length; i++){
+//       text(letters[i], x+ increment*i, height-300);       
+//            rect(x+ increment*i,height-450, 130, 200);     
+//     }
+}
+
